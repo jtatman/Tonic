@@ -49,7 +49,7 @@ namespace Tonic {
       /*!
           Subclasses should use this function to put new data into output_
       */
-      virtual void computeOutput(const SynthesisContext_ & context) {};
+      virtual void computeOutput(const SynthesisContext_ & /*context*/) {};
       
       ControlGeneratorOutput  output_;
       unsigned long           lastFrameIndex_;

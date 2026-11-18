@@ -49,6 +49,7 @@ namespace Tonic{
       /*!
        tick method without context argument passes down this instance's SynthesisContext_
        */
+      using Generator_::tick;
       void tick( TonicFrames& frames );
       
       void fillBufferOfFloats(float *outData,  unsigned int numFrames, unsigned int numChannels);

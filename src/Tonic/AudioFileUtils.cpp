@@ -89,9 +89,9 @@ namespace Tonic {
   
   #else
   
-  SampleTable loadAudioFile(std::string path, int numChannels){
+  SampleTable loadAudioFile(std::string /*path*/, int /*numChannels*/){
     Tonic::error("loadAudioFile is currently only implemented for Apple platforms.");
-    return NULL;
+    return SampleTable();
   }
   
   

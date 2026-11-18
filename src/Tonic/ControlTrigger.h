@@ -27,7 +27,7 @@ namespace Tonic {
       
     };
     
-    inline void ControlTrigger_::computeOutput(const SynthesisContext_ & context){
+    inline void ControlTrigger_::computeOutput(const SynthesisContext_ & /*context*/){
       output_.triggered = doTrigger;
       doTrigger = false;
     }

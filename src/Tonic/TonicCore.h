@@ -303,7 +303,7 @@ namespace Tonic {
     printf("Tonic::warning: %s\n", message.c_str());
   }
   
-  inline void debug(std::string message){
+  inline void debug([[maybe_unused]] std::string message){
 #ifdef TONIC_DEBUG
     printf("Tonic::debug: %s\n", message.c_str());
 #endif
