@@ -23,12 +23,12 @@ namespace Tonic {
     protected:
       void computeOutput(const SynthesisContext_ & context);
       
-      string message;
+      std::string message;
       bool hasPrinted;
       
     public:
       ControlPrinter_();
-      void setMessage(string message);
+      void setMessage(std::string message);
       
     };
     
@@ -43,14 +43,14 @@ namespace Tonic {
   }
   
   /*
-    A controlconditioner which can be used to print the value of its input. You can set an optional format string to customize
+    A controlconditioner which can be used to print the value of its input. You can set an optional format std::string to customize
     the message using printf-style formatting, with exactly one %f placeholder. For example: "Current bpm is %f.";
   */
   
   class ControlPrinter : public TemplatedControlConditioner<Tonic::ControlPrinter, Tonic_::ControlPrinter_>{
     
   public:
-    ControlPrinter message(string message){
+    ControlPrinter message(std::string message){
       gen()->setMessage(message);
       return *this;
     }

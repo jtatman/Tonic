@@ -45,3 +45,11 @@ endif()
 if(TONIC_BUILD_EXAMPLES)
   add_subdirectory(examples/Standalone)
 endif()
+
+# Compile-check the demo synth patches so API changes that break them fail CI.
+option(TONIC_BUILD_DEMO_SYNTHS "Compile-check examples/Demo Synths" ON)
+if(TONIC_BUILD_DEMO_SYNTHS)
+  file(GLOB TONIC_DEMO_SYNTHS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/examples/Demo Synths/*.cpp")
+  add_library(tonic_demo_synths OBJECT ${TONIC_DEMO_SYNTHS})
+  target_link_libraries(tonic_demo_synths PRIVATE tonic)
+endif()

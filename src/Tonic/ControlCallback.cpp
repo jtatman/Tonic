@@ -19,13 +19,13 @@ namespace Tonic { namespace Tonic_{
     }
   }
   
-  void  ControlCallback_::setCallback(function<void(ControlGeneratorOutput)> fn){
+  void  ControlCallback_::setCallback(std::function<void(ControlGeneratorOutput)> fn){
     callback_ = fn;
   }
   
 } // Namespace Tonic_
   
-  ControlCallback::ControlCallback(Synth* synth, function<void(ControlGeneratorOutput)> fn ){
+  ControlCallback::ControlCallback(Synth* synth, std::function<void(ControlGeneratorOutput)> fn ){
     synth->addAuxControlGenerator(*this);
     gen()->setCallback(fn);
   }
