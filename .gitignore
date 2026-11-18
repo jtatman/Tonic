@@ -147,3 +147,6 @@ lib/iOS/
 .beads-credential-key
 .beads/proxieddb/
 *.gate.lock*
+
+# codegraph index (regenerable)
+.codegraph/

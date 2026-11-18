@@ -98,10 +98,10 @@ namespace Tonic
     for(i = 0; i < length; i++)
       realCepstrumOut[i] = realTime[i];
     
-    delete realTime;
-    delete imagTime;
-    delete realFreq;
-    delete imagFreq;
+    delete[] realTime;
+    delete[] imagTime;
+    delete[] realFreq;
+    delete[] imagFreq;
   }
   
   // Compute Minimum Phase Reconstruction Of Signal
@@ -147,10 +147,10 @@ namespace Tonic
     for(i = 0; i < length; i++)
       minimumPhase[i] = realTime[i];
     
-    delete realTime;
-    delete imagTime;
-    delete realFreq;
-    delete imagFreq;
+    delete[] realTime;
+    delete[] imagTime;
+    delete[] realFreq;
+    delete[] imagFreq;
   }
   
   // ---------------- minBLEP Generation --------------------
@@ -220,8 +220,8 @@ namespace Tonic
       minBLEP[i] *= a;
     }
         
-    delete buffer1;
-    delete buffer2;
+    delete[] buffer1;
+    delete[] buffer2;
     return minBLEP;
   }
 
