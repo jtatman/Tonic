@@ -28,7 +28,7 @@ namespace Tonic {
         errorString[6] = '\0';
     } else {
         // No, format it as an integer
-        sprintf(errorString, "%d", (int)error);
+        snprintf(errorString, sizeof(errorString), "%d", (int)error);
     }
     fprintf(stderr, "Error: %s (%s)\n", operation, errorString);
   }

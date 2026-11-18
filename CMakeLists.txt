@@ -29,7 +29,7 @@ elseif(TONIC_WARNINGS)
 endif()
 
 if(APPLE)
-  target_link_libraries(tonic PUBLIC "-framework Accelerate")
+  target_link_libraries(tonic PUBLIC "-framework Accelerate" "-framework AudioToolbox" "-framework CoreFoundation")
 endif()
 
 find_package(Threads REQUIRED)
