@@ -137,12 +137,12 @@ bd prime                # Refresh Beads context
   Process rules live in mnemoria, not in this file.
 - **Code analysis:** `codegraph` (index in `.codegraph/`, not committed). Refresh with `codegraph sync`.
 - **Git:** commit after every significant change and at checkpoints. Work on branches
-  (`phase0-modernize` for Phase 0); `origin` is the jtatman/Tonic fork.
+  (Phase 0 and the Phase 1 design are merged to `master`); `origin` is the jtatman/Tonic fork. The new core lives in jtatman/tonic2.
 - Keep this section identical in `CLAUDE.md` and `AGENTS.md`.
 
 ## Build & Test
 
-Builds run in WSL (Ubuntu, g++ 15, cmake 4.x); the Windows host has no compiler. CI covers Linux, Windows (MSVC) and macOS.
+Builds run in WSL (Ubuntu, g++ 15, cmake 4.x) or with Visual Studio 2022 on Windows (its bundled cmake is not on PATH: `C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin`). CI covers Linux, Windows (MSVC) and macOS.
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release   # options: TONIC_BUILD_TESTS (ON), TONIC_BUILD_EXAMPLES (OFF)
