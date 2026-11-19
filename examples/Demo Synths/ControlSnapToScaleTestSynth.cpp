@@ -18,7 +18,7 @@ class ControlSnapToScaleTestSynth : public Synth{
   ControlSnapToScaleTestSynth(){
    
     float scaleArr[6] = {0,2,3,7,10};
-    vector<float> scale(scaleArr, scaleArr + sizeof scaleArr / sizeof scaleArr[0]);
+    std::vector<float> scale(scaleArr, scaleArr + sizeof scaleArr / sizeof scaleArr[0]);
     
     ControlGenerator speed = addParameter("speed", 0.85);
     

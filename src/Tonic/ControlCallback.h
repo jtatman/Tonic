@@ -26,10 +26,10 @@ namespace Tonic {
       
     protected:
       void computeOutput(const SynthesisContext_ & context);
-      function<void(ControlGeneratorOutput)> callback_;
+      std::function<void(ControlGeneratorOutput)> callback_;
       
     public:
-      void setCallback(function<void(ControlGeneratorOutput)> fn);
+      void setCallback(std::function<void(ControlGeneratorOutput)> fn);
       
     };
     
@@ -43,7 +43,7 @@ namespace Tonic {
     
   public:
   
-    ControlCallback(Synth* synth, function<void(ControlGeneratorOutput)>);
+    ControlCallback(Synth* synth, std::function<void(ControlGeneratorOutput)>);
     
 
   };

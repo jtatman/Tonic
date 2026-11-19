@@ -22,7 +22,7 @@ using namespace Tonic;
 class FilteredNoiseSynth : public Synth{
 public:
   FilteredNoiseSynth(){
-    vector<float> midiNums;
+    std::vector<float> midiNums;
     midiNums.push_back(-24);
     midiNums.push_back(0);
     midiNums.push_back(3);

@@ -33,8 +33,8 @@ public:
     
     for(int i = 0; i < NUM_STEPS; i++){
       float initialValue =  randomFloat(10, 80);
-      pitches.addInput(addParameter("step" + to_string(i) + "Pitch", initialValue).min(10).max(80));
-      cutoffs.addInput(addParameter("step" + to_string(i) + "Cutoff", 500).min(30).max(1500));
+      pitches.addInput(addParameter("step" + std::to_string(i) + "Pitch", initialValue).min(10).max(80));
+      cutoffs.addInput(addParameter("step" + std::to_string(i) + "Cutoff", 500).min(30).max(1500));
     }
   
     ControlGenerator midiNote = transpose + (pitches >> ControlSnapToScale().setScale({0,2,3,5,7,10}));

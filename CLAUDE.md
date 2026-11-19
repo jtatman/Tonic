@@ -58,20 +58,46 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 <!-- END BEADS INTEGRATION -->
 
 
+
+<!-- BEGIN PROJECT SECTION (keep identical in CLAUDE.md and AGENTS.md) -->
+## Workflow and tooling
+
+- **Tasks / short-term memory:** `bd` (beads). Start with `bd ready`; Phase 0 epic is `Tonic-ob6`.
+- **Long-term memory and development process:** `mnemoria` (store in `./mnemoria`, committed to git).
+  Read: `mnemoria search "<topic>"` / `mnemoria ask "<question>"`.
+  Write: `mnemoria add -a <agent> -t decision|discovery|intent --summary "<one line>" "<details>"`.
+  Process rules live in mnemoria, not in this file.
+- **Code analysis:** `codegraph` (index in `.codegraph/`, not committed). Refresh with `codegraph sync`.
+- **Git:** commit after every significant change and at checkpoints. Work on branches
+  (`phase0-modernize` for Phase 0); `origin` is the jtatman/Tonic fork.
+- Keep this section identical in `CLAUDE.md` and `AGENTS.md`.
+
 ## Build & Test
 
-_Add your build and test commands here_
+Builds run in WSL (Ubuntu, g++ 15, cmake 4.x); the Windows host has no compiler. CI covers Linux, Windows (MSVC) and macOS.
 
 ```bash
-# Example:
-# npm install
-# npm test
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release   # options: TONIC_BUILD_TESTS (ON), TONIC_BUILD_EXAMPLES (OFF)
+cmake --build build -j
+ctest --test-dir build --output-on-failure        # Tests/regression_tests.cpp, offline renders, no audio device
 ```
+
+From Windows: `wsl.exe -e bash -lc 'cmake -S /mnt/c/Users/stora/Downloads/vsts/Tonic -B /tmp/tonic-cmake && cmake --build /tmp/tonic-cmake -j8 && ctest --test-dir /tmp/tonic-cmake'`
 
 ## Architecture Overview
 
-_Add a brief overview of your project architecture_
+- `src/Tonic/` ~12k LOC, C++17, Unlicense (public domain). `src/Tonic.h` is the umbrella header.
+- Pull-based graph processed in fixed 64-sample blocks (`kSynthesisBlockSize`). `Generator` = audio rate,
+  `ControlGenerator` = once per block. Public classes are ref-counted handles (`TonicSmartPointer`) around
+  `Tonic_::Xxx_` implementation classes.
+- `BufferFiller_` -> `Synth` / `Mixer` turn the graph into interleaved float buffers (`fillBufferOfFloats`).
+- `TonicCore.h`: global sample rate (`setSampleRate`, C++17 inline variable), helpers, mutex macros (std::mutex).
+- Known structural limits (Phase 1 redesign): non-atomic refcounts, lock on audio thread, mono/stereo only,
+  no polyphony, no sample-accurate events, one global sample rate.
 
 ## Conventions & Patterns
 
-_Add your project-specific conventions here_
+- New units follow the handle/impl pair + `TONIC_MAKE_GEN_SETTERS` / `TONIC_MAKE_CTRL_GEN_SETTERS` macros.
+- Every bug fix gets a regression check in `Tests/regression_tests.cpp`.
+- Plugin formats (VST3/CLAP/LV2/AU/JACK) belong in a wrapper (DPF), never in the core library.
+<!-- END PROJECT SECTION -->

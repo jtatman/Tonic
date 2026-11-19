@@ -36,45 +36,22 @@ extern "C" {
 // Platform-specific macros and includes
 #if defined (__APPLE__)
 
-  #import <Accelerate/Accelerate.h>
+  #include <Accelerate/Accelerate.h>
   #define USE_APPLE_ACCELERATE
 
 #endif
 
-#if (defined (__APPLE__) || defined (__linux__))
+// Portable mutex (C++11). Replaces the former pthread / Windows.h CRITICAL_SECTION macros,
+// so the core header no longer pulls in <Windows.h> and its min/max macros.
+// NOTE: the audio thread still takes this lock once per synthesis block; a lock-free
+// parameter path is planned for the Phase 1 core redesign.
+#include <mutex>
 
-  #include <pthread.h> 
-
-  #define TONIC_MUTEX_T           pthread_mutex_t
-  #define TONIC_MUTEX_INIT(x)     pthread_mutex_init(&x, NULL)
-  #define TONIC_MUTEX_DESTROY(x)  pthread_mutex_destroy(&x)
-  #define TONIC_MUTEX_LOCK(x)     pthread_mutex_lock(&x)
-  #define TONIC_MUTEX_UNLOCK(x)   pthread_mutex_unlock(&x)
-
-#elif (defined (_WIN32) || defined (__WIN32__))
-
-  #define WIN32_LEAN_AND_MEAN
-  #include <Windows.h>
-  
-  // Clear these macros to avoid interfering with ControlParameter::min and ::max
-  #undef min
-  #undef max
-
-#if _MSC_VER < 1800
-  // Windows' C90 <cmath> header does not define log2
-  inline static float log2(float n) {
-	return log(n) / log(2);
-  }
-#endif
-
-  // Windows native mutexes
-  #define TONIC_MUTEX_T CRITICAL_SECTION
-  #define TONIC_MUTEX_INIT(x) InitializeCriticalSection(&x)
-  #define TONIC_MUTEX_DESTROY(x) DeleteCriticalSection(&x)
-  #define TONIC_MUTEX_LOCK(x) EnterCriticalSection(&x)
-  #define TONIC_MUTEX_UNLOCK(x) LeaveCriticalSection(&x)
-
-#endif
+#define TONIC_MUTEX_T           std::mutex
+#define TONIC_MUTEX_INIT(x)     ((void)0)
+#define TONIC_MUTEX_DESTROY(x)  ((void)0)
+#define TONIC_MUTEX_LOCK(x)     (x).lock()
+#define TONIC_MUTEX_UNLOCK(x)   (x).unlock()
 
 // --- Macro for enabling denormal rounding on audio thread ---
 
@@ -87,7 +64,7 @@ extern "C" {
 #endif
 
 
-using namespace std;
+
 
 typedef uint32_t              TonicUInt32;
 typedef int32_t               TonicInt32;
@@ -117,7 +94,7 @@ namespace Tonic {
   /*! Objects under the Tonic_ namespace are internal DSP-level objects not intended for public usage */
   namespace Tonic_ {
     
-    static TonicFloat sampleRate_ = 44100.f;
+    inline TonicFloat sampleRate_ = 44100.f;
     
   }
   
@@ -125,18 +102,18 @@ namespace Tonic {
   
   //! Set the operational sample rate.
   /*! !!!: CHANGING WHILE RUNNING WILL RESULT IN UNDEFINED BEHAVIOR. MUST BE SET PRIOR TO OBJECT ALLOCATION. */
-  static void setSampleRate(TonicFloat sampleRate){
+  inline void setSampleRate(TonicFloat sampleRate){
     Tonic_::sampleRate_ = sampleRate;
   }
   
   //! Return sample rate
-  static TonicFloat sampleRate(){
+  inline TonicFloat sampleRate(){
     return Tonic_::sampleRate_;
   };
 
   //! "Vector" size for audio processing. ControlGenerators update at this rate.
   /*! !!!: THIS VALUE SHOULD BE A POWER-OF-TWO WHICH IS LESS THAN THE HARDWARE BUFFER SIZE */
-  static const unsigned int kSynthesisBlockSize = 64;
+  constexpr unsigned int kSynthesisBlockSize = 64;
   
   // -- Global Types --
   
@@ -183,12 +160,12 @@ namespace Tonic {
   
   //! Dummy context for ticking things in-place.
   // Will always be at time 0, forceNewOutput == true
-  static const Tonic_::SynthesisContext_ DummyContext;
+  inline const Tonic_::SynthesisContext_ DummyContext;
 
 #pragma mark - Utility Functions
   
   //-- Vector Math --
-  inline static void vcopy( TonicFloat * dst, unsigned int dst_str, const TonicFloat * src, unsigned int src_str, unsigned int length ){
+  inline void vcopy( TonicFloat * dst, unsigned int dst_str, const TonicFloat * src, unsigned int src_str, unsigned int length ){
     for (unsigned int i=0; i<length; i++, dst += dst_str, src += src_str){
       *dst = *src;
     }
@@ -196,19 +173,19 @@ namespace Tonic {
   
   //-- Arithmetic --
   
-  inline static TonicFloat max(TonicFloat a, TonicFloat b) {
+  inline TonicFloat max(TonicFloat a, TonicFloat b) {
     return (a > b ? a : b);
   }
 
-  inline static TonicFloat min(TonicFloat a, TonicFloat b) {
+  inline TonicFloat min(TonicFloat a, TonicFloat b) {
     return (a < b ? a : b);
   }
 
-  inline static TonicFloat clamp(TonicFloat val, TonicFloat min, TonicFloat max) {
+  inline TonicFloat clamp(TonicFloat val, TonicFloat min, TonicFloat max) {
     return (val < min ? min : (val > max ? max : val));
   }
   
-  inline static TonicFloat map(TonicFloat val, TonicFloat inMin, TonicFloat inMax, TonicFloat outMin, TonicFloat outMax, bool clamp = true) {
+  inline TonicFloat map(TonicFloat val, TonicFloat inMin, TonicFloat inMax, TonicFloat outMin, TonicFloat outMax, bool clamp = true) {
     TonicFloat result = ((val - inMin)/(inMax - inMin)) * (outMax - outMin) + outMin;
     if (clamp){
       result = Tonic::clamp(result, min(outMin,outMax), max(outMin,outMax));
@@ -217,7 +194,7 @@ namespace Tonic {
   }
   
 
-  inline static TonicFloat lerp(TonicFloat x1, TonicFloat x2, TonicFloat f){
+  inline TonicFloat lerp(TonicFloat x1, TonicFloat x2, TonicFloat f){
     return (x1 + f*(x2-x1));
   }
   
@@ -256,25 +233,25 @@ namespace Tonic {
   #define TONIC_LOG_MAP_BASEVAL -4
   
   //! Takes linear value 0-1, maps to logarithmic value (base logBase) scaled to min-max. Useful for making faders.
-  inline static TonicFloat mapLinToLog(float linValue, float min, float max){
+  inline TonicFloat mapLinToLog(float linValue, float min, float max){
     float expValue = map(linValue, 0.f, 1.f, TONIC_LOG_MAP_BASEVAL, 0.f, true);
     return map(powf(10.f,expValue), 0.0001f, 1.0f, min, max, true);
   }
   
   //! Takes logarithmic value between min-max, maps to linear value 0-1. Useful for making faders.
-  inline static TonicFloat mapLogToLin(float logValue, float min, float max){
+  inline TonicFloat mapLogToLin(float logValue, float min, float max){
     return map(log10f(map(logValue, min, max, 0.0001f, 1.f,true)), TONIC_LOG_MAP_BASEVAL, 0.f, 0.f, 1.f, true);
   }
   
   //-- Freq/MIDI --
   
   //! Midi note number to frequency in Hz
-  inline static TonicFloat mtof(TonicFloat nn){
+  inline TonicFloat mtof(TonicFloat nn){
     return 440.0f * powf(2.0f, (nn-69.0f)/12.0f);
   }
   
   //! Frequency in Hz to midi note number
-  inline static TonicFloat ftom(TonicFloat f){
+  inline TonicFloat ftom(TonicFloat f){
     return 12.0f * (logf(f/440.0f)/logf(2.0f)) + 69.0f;
   }
   
@@ -282,21 +259,21 @@ namespace Tonic {
   /*
     Using 0 dBFS as 1.0
   */
-  inline static TonicFloat linTodB(TonicFloat lv){
+  inline TonicFloat linTodB(TonicFloat lv){
     return 20.0f*log10f(max(0, lv));
   }
   
-  inline static TonicFloat dBToLin(TonicFloat dBFS){
+  inline TonicFloat dBToLin(TonicFloat dBFS){
     return powf(10.f,(dBFS/20.0f));
   }
   
   // -- Misc --
   
-  inline static TonicFloat randomSample(){
+  inline TonicFloat randomSample(){
     return ((TonicFloat)rand()/RAND_MAX) * 2.0f - 1.0f;
   }
   
-  static float randomFloat(float a, float b) {
+  inline float randomFloat(float a, float b) {
     float random = ((float) rand()) / (float) RAND_MAX;
     float diff = b - a;
     float r = random * diff;
@@ -305,16 +282,16 @@ namespace Tonic {
 
   //! Tonic exception class
   // May want to implement custom exception behavior here, but for now, this is essentially a typedef
-  class TonicException : public runtime_error
+  class TonicException : public std::runtime_error
   {
     public:
-    TonicException(string const& error) : runtime_error(error) {};
+    TonicException(std::string const& error) : std::runtime_error(error) {};
 
   };
   
   // -- Logging --
   
-  static void error(string message, bool fatal = false){
+  inline void error(std::string message, bool fatal = false){
     // maybe also log to console?
     printf("Tonic::error: %s\n", message.c_str() );
     if (fatal){
@@ -322,11 +299,11 @@ namespace Tonic {
     }
   }
   
-  static void warning(string message){
+  inline void warning(std::string message){
     printf("Tonic::warning: %s\n", message.c_str());
   }
   
-  static void debug(string message){
+  inline void debug([[maybe_unused]] std::string message){
 #ifdef TONIC_DEBUG
     printf("Tonic::debug: %s\n", message.c_str());
 #endif
@@ -338,23 +315,23 @@ namespace Tonic {
     
     protected:
       
-      typedef std::map<string, T> TonicDictionaryMap;
+      typedef std::map<std::string, T> TonicDictionaryMap;
       TonicDictionaryMap dictionaryMap_;
       
     public:
       
       //! Add object to dictionary. Replaces old object if one exists.
-      void insertObject(string name, T object){
+      void insertObject(std::string name, T object){
         dictionaryMap_[name] = object;
       }
       
-      bool containsObjectNamed(string name){
+      bool containsObjectNamed(std::string name){
         typename TonicDictionaryMap::iterator it = dictionaryMap_.find(name);
         return it != dictionaryMap_.end();
       }
       
       //! Returns object with given name. Returns new object if no object has been set for name, does not insert it.
-      T objectNamed(string name){
+      T objectNamed(std::string name){
         T obj;
         typename TonicDictionaryMap::iterator it = dictionaryMap_.find(name);
         if (it != dictionaryMap_.end()){
@@ -364,7 +341,7 @@ namespace Tonic {
       }
       
       //! Remove object for name
-      void removeObjectNamed(string name){
+      void removeObjectNamed(std::string name){
         typename TonicDictionaryMap::iterator it = dictionaryMap_.find(name);
         if (it != dictionaryMap_.end()){
           dictionaryMap_.erase(it);

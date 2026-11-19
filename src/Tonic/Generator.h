@@ -37,7 +37,7 @@ namespace Tonic {
       
       // override point for defining generator behavior
       // subclasses should implment to fill frames with new data
-      virtual void computeSynthesisBlock( const SynthesisContext_ &context ) {};
+      virtual void computeSynthesisBlock( const SynthesisContext_ &/*context*/ ) {};
 
       
       bool            isStereoOutput_;

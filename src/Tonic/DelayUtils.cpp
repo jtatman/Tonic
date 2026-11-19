@@ -11,11 +11,11 @@
 namespace Tonic {
   
   DelayLine::DelayLine() :
-    lastDelayTime_(0),
-    readHead_(0),
-    writeHead_(0),
     isInitialized_(false),
-    interpolates_(true)
+    interpolates_(true),
+    writeHead_(0),
+    readHead_(0),
+    lastDelayTime_(0)
   {
     resize(kSynthesisBlockSize, 1, 0);
   }

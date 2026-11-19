@@ -28,13 +28,13 @@ namespace Tonic {
         errorString[6] = '\0';
     } else {
         // No, format it as an integer
-        sprintf(errorString, "%d", (int)error);
+        snprintf(errorString, sizeof(errorString), "%d", (int)error);
     }
     fprintf(stderr, "Error: %s (%s)\n", operation, errorString);
   }
   
 
-  SampleTable loadAudioFile(string path, int numChannels){
+  SampleTable loadAudioFile(std::string path, int numChannels){
   
     static const int BYTES_PER_SAMPLE = sizeof(TonicFloat);
     
@@ -89,9 +89,9 @@ namespace Tonic {
   
   #else
   
-  SampleTable loadAudioFile(string path, int numChannels){
+  SampleTable loadAudioFile(std::string /*path*/, int /*numChannels*/){
     Tonic::error("loadAudioFile is currently only implemented for Apple platforms.");
-    return NULL;
+    return SampleTable();
   }
   
   

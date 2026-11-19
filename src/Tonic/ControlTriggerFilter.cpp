@@ -45,9 +45,9 @@ namespace Tonic { namespace Tonic_{
   }
   
   
-  void  ControlTriggerFilter_::sequence(string seqArg){
+  void  ControlTriggerFilter_::sequence(std::string seqArg){
     sequence_.clear();
-    for(int i = 0; i< seqArg.size(); i++){
+    for(size_t i = 0; i< seqArg.size(); i++){
       if (seqArg.at(i) == '0' || seqArg.at(i) == '1') {
         sequence_.push_back(seqArg.at(i) == '1');
       }

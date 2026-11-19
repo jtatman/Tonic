@@ -104,7 +104,7 @@ namespace Tonic {
       TonicFloat lastOut_[2];
       
     protected:
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context )
+      inline void applyFilter( TonicFloat cutoff, TonicFloat /*Q*/, const SynthesisContext_ & /*context*/ )
       {
         
         TonicFloat *inptr = &dryFrames_[0];
@@ -143,7 +143,7 @@ namespace Tonic {
       
     protected:
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context )
+      inline void applyFilter( TonicFloat cutoff, TonicFloat /*Q*/, const SynthesisContext_ & /*context*/ )
       {
         
         TonicFloat *inptr = &dryFrames_[0];
@@ -184,7 +184,7 @@ namespace Tonic {
       
     protected:
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context ){
+      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & /*context*/ ){
         // set coefficients
         TonicFloat newCoef[5];
         bltCoef(0, 0, bNormalizeGain_ ? 1.0f/Q : 1.0f, 1.0f/Q, 1, cutoff, newCoef);
@@ -217,7 +217,7 @@ namespace Tonic {
       
     protected:
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context ){
+      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & /*context*/ ){
         // set coefficients
         TonicFloat newCoef[5];
         
@@ -259,7 +259,7 @@ namespace Tonic {
    
     protected:
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context ){
+      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & /*context*/ ){
         
         // set coefficients
         TonicFloat newCoef[5];
@@ -293,7 +293,7 @@ namespace Tonic {
       
     protected:
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context ){
+      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & /*context*/ ){
         // set coefficients
         TonicFloat newCoef[5];
         
@@ -335,7 +335,7 @@ namespace Tonic {
     protected:
       
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context ){
+      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & /*context*/ ){
         
         // set coefficients
         TonicFloat newCoef[5];
@@ -369,7 +369,7 @@ namespace Tonic {
       
     protected:
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context ){
+      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & /*context*/ ){
         // set coefficients
         TonicFloat newCoef[5];
         
@@ -411,7 +411,7 @@ namespace Tonic {
     protected:
       
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context ){
+      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & /*context*/ ){
         
         // set coefficients
         TonicFloat newCoef[5];
@@ -445,7 +445,7 @@ namespace Tonic {
       
     protected:
       
-      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & context ){
+      inline void applyFilter( TonicFloat cutoff, TonicFloat Q, const SynthesisContext_ & /*context*/ ){
         // set coefficients
         TonicFloat newCoef[5];
         

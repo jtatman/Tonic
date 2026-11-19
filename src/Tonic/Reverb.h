@@ -48,7 +48,7 @@ namespace Tonic {
     {
       TonicFloat *dptr = &frames[0];
       TonicFloat y;
-      for (int i=0; i<kSynthesisBlockSize; i++){
+      for (unsigned int i=0; i<kSynthesisBlockSize; i++){
         
         // feedback stage
         y = *dptr + delayBack_.tickOut(delay_) * coef_;
@@ -88,16 +88,16 @@ namespace Tonic {
         LPF12           inputLPF_;
         HPF12           inputHPF_;
       
-        vector<TonicFloat> reflectTapTimes_;
-        vector<TonicFloat> reflectTapScale_;
+        std::vector<TonicFloat> reflectTapTimes_;
+        std::vector<TonicFloat> reflectTapScale_;
 
         // Comb filters
-        vector<FilteredFBCombFilter6> combFilters_[2];
-        vector<ControlValue>          combFilterDelayTimes_[2];
-        vector<ControlValue>          combFilterScaleFactors_[2];
+        std::vector<FilteredFBCombFilter6> combFilters_[2];
+        std::vector<ControlValue>          combFilterDelayTimes_[2];
+        std::vector<ControlValue>          combFilterScaleFactors_[2];
       
         // Allpass filters
-        vector<ImpulseDiffuserAllpass> allpassFilters_[2];
+        std::vector<ImpulseDiffuserAllpass> allpassFilters_[2];
       
         // Signal vector workspaces
         TonicFrames   workspaceFrames_[2];

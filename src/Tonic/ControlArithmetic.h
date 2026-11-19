@@ -38,7 +38,7 @@ namespace Tonic {
       
       void computeOutput( const SynthesisContext_ & context );
       
-      vector<ControlGenerator> inputs;
+      std::vector<ControlGenerator> inputs;
       
     };
     
@@ -79,21 +79,21 @@ namespace Tonic {
     }
   };
   
-  static ControlAdder operator+(ControlGenerator a, ControlGenerator b){
+  inline ControlAdder operator+(ControlGenerator a, ControlGenerator b){
     ControlAdder adder;
     adder.input(a);
     adder.input(b);
     return adder;
   }
   
-  static ControlAdder operator+(ControlGenerator a, float b){
+  inline ControlAdder operator+(ControlGenerator a, float b){
     ControlAdder adder;
     adder.input(a);
     adder.input(ControlValue(b));
     return adder;
   }
   
-  static ControlAdder operator+(float a, ControlGenerator b){
+  inline ControlAdder operator+(float a, ControlGenerator b){
     ControlAdder adder;
     adder.input(ControlValue(a));
     adder.input(ControlGenerator(b));
@@ -145,21 +145,21 @@ namespace Tonic {
     
   };
   
-  static ControlSubtractor operator-(ControlGenerator a, ControlGenerator b){
+  inline ControlSubtractor operator-(ControlGenerator a, ControlGenerator b){
     ControlSubtractor subtractor;
     subtractor.left(a);
     subtractor.right(b);
     return subtractor;
   }
   
-  static ControlSubtractor operator-(ControlGenerator a, float b){
+  inline ControlSubtractor operator-(ControlGenerator a, float b){
     ControlSubtractor subtractor;
     subtractor.left(a);
     subtractor.right(ControlValue(b));
     return subtractor;
   }
   
-  static ControlSubtractor operator-(float a, ControlGenerator b){
+  inline ControlSubtractor operator-(float a, ControlGenerator b){
     ControlSubtractor subtractor;
     subtractor.left(ControlValue(a));
     subtractor.right(ControlGenerator(b));
@@ -186,7 +186,7 @@ namespace Tonic {
       
       void computeOutput( const SynthesisContext_ & context );
       
-      vector<ControlGenerator> inputs;
+      std::vector<ControlGenerator> inputs;
       
     };
     
@@ -227,21 +227,21 @@ namespace Tonic {
     }
   };
   
-  static ControlMultiplier operator*(ControlGenerator a, ControlGenerator b){
+  inline ControlMultiplier operator*(ControlGenerator a, ControlGenerator b){
     ControlMultiplier mult;
     mult.input(a);
     mult.input(b);
     return mult;
   }
   
-  static ControlMultiplier operator*(ControlGenerator a, float b){
+  inline ControlMultiplier operator*(ControlGenerator a, float b){
     ControlMultiplier mult;
     mult.input(a);
     mult.input(ControlValue(b));
     return mult;
   }
   
-  static ControlMultiplier operator*(float a, ControlGenerator b){
+  inline ControlMultiplier operator*(float a, ControlGenerator b){
     ControlMultiplier mult;
     mult.input(ControlValue(a));
     mult.input(ControlGenerator(b));
@@ -300,21 +300,21 @@ namespace Tonic {
     
   };
   
-  static ControlDivider operator/(ControlGenerator a, ControlGenerator b){
+  inline ControlDivider operator/(ControlGenerator a, ControlGenerator b){
     ControlDivider divider;
     divider.left(a);
     divider.right(b);
     return divider;
   }
   
-  static ControlDivider operator/(ControlGenerator a, float b){
+  inline ControlDivider operator/(ControlGenerator a, float b){
     ControlDivider divider;
     divider.left(a);
     divider.right(ControlValue(b));
     return divider;
   }
   
-  static ControlDivider operator/(float a, ControlGenerator b){
+  inline ControlDivider operator/(float a, ControlGenerator b){
     ControlDivider divider;
     divider.left(ControlValue(a));
     divider.right(ControlGenerator(b));

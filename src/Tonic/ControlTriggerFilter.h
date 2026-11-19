@@ -22,7 +22,7 @@ namespace Tonic {
       
     protected:
       void computeOutput(const SynthesisContext_ & context);
-      vector<bool> sequence_;
+      std::vector<bool> sequence_;
       ControlGenerator trigger_;
       ControlGenerator loop_;
       int step;
@@ -30,7 +30,7 @@ namespace Tonic {
     public:
       ControlTriggerFilter_();
       ~ControlTriggerFilter_();
-      void sequence(string);
+      void sequence(std::string);
       void trigger(ControlGenerator);
       void setLoop(ControlGenerator);
     };
@@ -38,7 +38,7 @@ namespace Tonic {
   }
   
   /*!
-    Passes through, or blocks trigger messages based on a string-encoded sequence of "0" and "1" passed to the "sequence" method.
+    Passes through, or blocks trigger messages based on a std::string-encoded sequence of "0" and "1" passed to the "sequence" method.
     "1110" will result in four passes and one block. "111000" will result in three passes and three blocks. Any character other than "1" and "0" will be ignored. So you can add delimiters for readability, like this: "1110|1000|1010|1111". "1" means pass, "0" means block.
   */
   
@@ -48,7 +48,7 @@ namespace Tonic {
   
   TONIC_MAKE_CTRL_GEN_SETTERS(ControlTriggerFilter, trigger, trigger)
   TONIC_MAKE_CTRL_GEN_SETTERS(ControlTriggerFilter, loop, setLoop)
-  ControlTriggerFilter sequence(string seqArg){gen()->sequence(seqArg); return *this;};
+  ControlTriggerFilter sequence(std::string seqArg){gen()->sequence(seqArg); return *this;};
 
   };
 }
