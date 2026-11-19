@@ -383,7 +383,9 @@ namespace Tonic {
         return *this;
       }
       
-      ~TonicSmartPointer(){
+      // Virtual: handle subclasses (Generator, BufferFiller, effects) have virtual methods
+      // and are destroyed through base types, e.g. inside std::vector<Generator>.
+      virtual ~TonicSmartPointer(){
         release();
       }
       
